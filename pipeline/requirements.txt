@@ -1,0 +1,8 @@
+numpy>=1.26
+astropy>=6.0
+pyvo>=1.4
+astroquery>=0.4.7
+sep>=1.2
+reproject>=0.13
+photutils>=1.11
+scipy>=1.11
