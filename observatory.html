@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#080607" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <title>SimpleSpace</title>
     <style>
       @font-face {
@@ -8299,20 +8300,13 @@
 
           window.addEventListener("keydown", (e) => {
             const target = e.target;
-            if (
-              target &&
-              target.closest &&
-              target.closest(
-                "input, textarea, select, button, [contenteditable]",
-              )
-            )
-              return;
             const modalOpen =
               $("consensusModal") &&
               $("consensusModal").classList.contains("is-open");
             const drawerOpen =
               $("sidebarDrawer") &&
               $("sidebarDrawer").classList.contains("is-open");
+
             if (e.key === "Escape") {
               if (modalOpen) closeConsensus(false);
               else if (drawerOpen) closeDrawer();
@@ -8322,24 +8316,39 @@
               }
               return;
             }
+
+            if (
+              target &&
+              target.closest &&
+              target.closest("input, textarea, select, [contenteditable]")
+            )
+              return;
             if (modalOpen || drawerOpen) return;
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+            const key = (e.key || "").toLowerCase();
+            const onButton =
+              target && target.closest && target.closest("button");
+
+            // A focused button keeps its native Space/Enter activation.
             if (e.code === "Space") {
+              if (onButton) return;
               e.preventDefault();
               toggleBlink();
               return;
             }
+
             if (e.key === "+" || e.key === "=") {
               e.preventDefault();
               setZoom(state.zoom * 1.35);
             } else if (e.key === "-" || e.key === "_") {
               e.preventDefault();
               setZoom(state.zoom / 1.35);
-            } else if (e.key.toLowerCase() === "g") toggleGrid();
-            else if (e.key.toLowerCase() === "c") toggleCatalog();
-            else if (e.key.toLowerCase() === "m")
-              setMaskOverlay(!state.showMask);
-            else if (e.key.toLowerCase() === "n") loadNextField();
-            else if (e.key.toLowerCase() === "f") openConsensus();
+            } else if (key === "g") toggleGrid();
+            else if (key === "c") toggleCatalog();
+            else if (key === "m") setMaskOverlay(!state.showMask);
+            else if (key === "n") loadNextField();
+            else if (key === "f") openConsensus();
           });
 
           window.addEventListener("resize", () => {
